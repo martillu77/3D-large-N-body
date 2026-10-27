@@ -1,0 +1,51 @@
+##############################################
+# Particle parameters:
+# Number of particles
+particles 100
+
+# Mass of each particle (kg)
+mass 1000.0
+
+# Particle physical radius (meter)
+radius 0.1
+
+
+
+##############################################
+# Initial conditions model: rotating_disk, proto_disc, collapsing_cloud, collapsing_cloud_lognormal
+initial_conditions rotating_disk
+
+# Initial distribution radius
+distrib_radius 10.0
+
+# Mass parameters
+stellar_mass 1000.0
+cloud_mass 100.0
+
+# Rotation
+omega 0.0001
+rotational_bias 0.5
+
+# Log-normal mass distribution parameter
+sigma 1.5
+
+# Collisions
+collisions 0
+restitution 1.0
+
+
+
+##############################################
+# Simulation 
+# Safety coeficient when choosing the simulation's time step: 
+#  ->   time_step = eta_dt * min_dynamical_time (SimpleVerletEngine)
+eta_dt 0.001
+
+# Simulation model
+model SimpleVerlet
+
+# Random seed
+seed 0
+
+
+
