@@ -16,6 +16,8 @@ public:
     void step(SimulationData& data) override;
     void reset(SimulationData& data) override;
 
+    double estimate_snapshot_interval(const SimulationData& data, double snapshot_dist_fraction) const override;
+
 };
 
 #endif

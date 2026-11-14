@@ -34,7 +34,14 @@ public:
     bool seed_provided() const;
     std::uint64_t seed() const;
 
+    const std::string& simulation_name() const { return simulation_name_; }
+    double snapshot_dist_fraction() const { return snapshot_dist_fraction_; }
+
+
 private:
+
+    std::string simulation_name_ = "unnamed";
+
     int particles_;                  // Number of particles
     double mass_;                    // Particle mass
     double radius_;                  // Particle radius
@@ -60,6 +67,8 @@ private:
     std::string model_;              // Model name (e.g. "SimpleVerlet")
     bool seed_provided_;
     std::uint64_t seed_;
+
+    double snapshot_dist_fraction_;
 
 
 

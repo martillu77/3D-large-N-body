@@ -48,7 +48,7 @@ def main():
 
     while True:
         try:
-            command = input("engine> ").strip().lower()
+            command = input("engine> ").strip().lower()  # all commands are converted to lowercase for consistency with python modules
         except (EOFError, KeyboardInterrupt):
             print()
             command = "quit"
@@ -56,6 +56,7 @@ def main():
         if not command:
             continue
 
+        print(command)
         response = send_command(engine, command)
 
         for line in response:

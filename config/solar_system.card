@@ -1,1 +1,16 @@
+simulation_name Solar_System
+
 initial_conditions Solar_system
+
+
+##############################################
+# Simulation 
+# Safety coeficient when choosing the simulation's time step: 
+#  ->   time_step = eta_dt * min_dynamical_time (SimpleVerletEngine)
+eta_dt 0.001
+
+# Simulation model
+model SimpleVerlet
+
+# Random seed
+seed 0

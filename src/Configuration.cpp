@@ -31,7 +31,9 @@ Configuration::Configuration()
       eta_dt_(0.01),
       model_("SimpleVerlet"),
       seed_(0),
-      seed_provided_(false)
+      seed_provided_(false),
+
+      snapshot_dist_fraction_(0.01)
 {
 }
 
@@ -58,7 +60,8 @@ bool Configuration::load(const std::string& filename) {
             if (!(input >> key >> value))       continue;
             if (key[0] == '#')                  continue;
 
-            if      (key == "particles")          particles_ = std::stoi(value);          // Number of particles
+            if      (key == "simulation_name")    simulation_name_ = value;
+            else if (key == "particles")          particles_ = std::stoi(value);          // Number of particles
             else if (key == "mass")               mass_ = std::stod(value);               // Particle mass
             else if (key == "radius")             radius_ = std::stod(value);             // Particle radius
 
@@ -97,7 +100,9 @@ bool Configuration::load(const std::string& filename) {
                 seed_ = std::stoull(value);                                               // Random seed for reproducibility 
                 if (seed_ == 0)                   seed_provided_ = false;
                 else                              seed_provided_ = true; 
-            } 
+            }
+
+            else if (key == "snapshot_dist_fraction") snapshot_dist_fraction_ = std::stod(value);
 
 
         }

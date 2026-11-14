@@ -1,3 +1,5 @@
+// sudo apt install libhdf5-dev
+
 // cmake -S . -B build
 // cmake --build build
 
@@ -7,6 +9,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <fstream>
 
 void print_help() {
     std::cout
@@ -50,6 +53,9 @@ int main() {
             input >> filename;
 
             if (filename.empty()) std::cout << "ERROR Missing configuration file\n";
+            
+            std::ifstream file(filename);
+            if (!file) std::cout << "ERROR Cannot open configuration file (check large/low case): " << filename << '\n';
 
             else if (configuration.load(filename)) {
                 simulation.load_configuration(configuration);
@@ -79,6 +85,25 @@ int main() {
             simulation.stop();
             std::cout << "OK\n";
             end_response();
+        }
+        else if (command == "set_snapshot_dist_fraction") {
+            std::string argument;
+            input >> argument;
+
+            try {
+                std::size_t pos = 0;
+                double value = std::stod(argument, &pos);
+
+                if (pos != argument.size()) {
+                    throw std::invalid_argument("Invalid number");
+                }
+
+                simulation.set_snapshot_dist_fraction(value);
+                std::cout << "snapshot_dist_fraction set to " << value << '\n';
+            }
+            catch (const std::exception& e) {
+                std::cout << "Error: " << e.what() << '\n';
+            }
         }
         else if (command == "status") {
             std::cout << simulation.status() << '\n';

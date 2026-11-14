@@ -1,12 +1,16 @@
 # Large N-body Simulator
 
-A 3D gravitational N-body simulator written in C++20, with a Python interface.
+A 3D gravitational N-body simulator written in C++20, with two independent Python tools for simulation control and interactive visualisation.
 
-The project aims to simulate the dynamical evolution of systems of particles interacting through gravity 
-The C++ simulation engine is designed to be independent of the Python interface, allowing the 
-numerical simulation and its visualisation to evolve separately.
+The project simulates the dynamical evolution of systems of particles interacting through gravity. It is organised into three independent components:
 
-**Current version:** v0.0.1  
+- **C++ simulation engine (`large-N-body`):** performs the numerical integration of the gravitational N-body system and stores simulation data in a JSON header and a HDF5 files.
+- **Python controller (`control.py`):** provides an interface to configure, start, pause, resume and stop simulations, as well as inspect their status.
+- **Python visualiser (`viewer.py`):** reads the HDF5 output and provides interactive 3D visualisation, including snapshot navigation, playback controls, adjustable playback speed and zoom.
+
+The C++ engine operates independently of the Python tools. The controller communicates with the simulation engine, while the visualiser works directly with the resulting HDF5 file. This separation allows the numerical engine, simulation control and visualisation to evolve independently.
+
+**Current version:** v0.0.2
 **Status:** Early development
 
 ## Features
@@ -20,12 +24,13 @@ numerical simulation and its visualisation to evolve separately.
   - Collapsing cloud.
   - Collapsing cloud with a lognormal mass distribution.
   - For debugging purposes there are also:
-  	- 
-  	-
-  	-
+  	- Twin_Masses
+  	- Threebody_Lagrange
+  	- Solar_system
 - Configurable simulation parameters through card files where, for now, units are in SI.
 - Characteristic units for mass, length and time, with internal gravitational constant \(G=1\).
 - Python interface for controlling the simulation.
+- Python visualiser for interactive visualisation of the simulation results.
 
 ## Requirements
 
@@ -83,18 +88,69 @@ Current limitations include:
 - Direct gravitational calculations scale quadratically with the number of particles.
 - No collision or merger model.
 - No gravitational softening.
-- Visualisation and diagnostic tools are still under development.
 - Numerical accuracy and long-term stability depend on the integration parameters and the simulated system.
 
 ## Future development
 
 Planned improvements include:
 
-- Visualisation of particle positions and trajectories.
 - Monitoring of kinetic, potential and total energy, and angular momentum.
 - Mass distribution diagnostics.
 - Improved adaptive time-stepping.
 - More efficient gravity solvers for larger particle counts: GPU usage and ray tracing
+
+
+## Simulation Controller
+
+The Python controller (`control.py`) provides a command-line interface to interact with the C++ simulation engine.
+
+Run it from the project root:
+> python3 interface/control.py
+
+The controller accepts the following commands:
+
+| Command                  | Description
+| `load_config <filename>` | Load simulation parameters from a configuration file.
+| `start`                  | Start the simulation.
+| `pause`                  | Pause the running simulation.
+| `resume`                 | Resume a paused simulation.
+| `stop`                   | Stop the simulation.
+| `status`                 | Display the current simulation state.
+| `dump`                   | Display detailed simulation information.
+| `help`                   | Show the available commands.
+| `quit`                   | Exit the controller.
+
+A typical workflow is to load a configuration file, start the simulation and monitor its progress using `status` and `dump`. The simulation can be paused, resumed or stopped at any time BUT not saved yet.
+
+The controller and simulation engine operate as separate components, communicating through the control interface.
+
+
+
+## Simulation Visualiser
+
+The Python visualiser (`viewer.py`) reads simulation output stored in HDF5 files and displays the particle trajectories as an interactive 3D animation.
+
+Run it from the project root:
+> python3 interface/viewer.py <simulation_file.h5>
+
+The visualiser provides the following controls:
+
+| Control                 | Description
+| **Play**                | Start or resume playback.
+| **Pause**               | Pause playback.
+| **FPS slider**          | Adjust the target display update frequency (frames per second).
+| **Frame step slider**   | Set the number of snapshots to advance at each update.
+| **Snapshot slider**     | Select a specific snapshot.
+| **Mouse wheel**         | Zoom in or out, centred on the mouse position.
+| **Left / Right arrows** | Move one snapshot backward or forward.
+| **Page Up / Page Down** | Jump 100 snapshots forward or backward.
+| **Space**               | Toggle playback.
+| **r**                   | Reset the zoom to the initial view.
+| **q**                   | Close the visualiser.
+
+The FPS and frame step controls can be combined to adjust playback speed. Increasing the frame step skips snapshots during playback, allowing faster navigation through long simulations even when the display update frequency is limited.
+
+The visualiser operates independently of the simulation engine and can be used to inspect completed simulations from their HDF5 output files.
 
 ## License
 

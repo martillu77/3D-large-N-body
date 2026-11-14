@@ -11,6 +11,8 @@ public:
     virtual void initialize(SimulationData& data) = 0;
     virtual void step(SimulationData& data) = 0;
     virtual void reset(SimulationData& data) = 0;
+
+    virtual double estimate_snapshot_interval(const SimulationData& data, double snapshot_dist_fraction) const = 0;
 };
 
 #endif

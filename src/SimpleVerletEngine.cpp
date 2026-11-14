@@ -1,8 +1,58 @@
 #include "SimpleVerletEngine.h"
 #include "GravitySolver.h"
 #include "cstdio" //printf
+#include "Particle.h"
+#include <cstdint>
+#include <vector>
+
+#include <cmath>
+#include <cstddef>
+#include "cstdio"
 
 SimpleVerletEngine::SimpleVerletEngine() {
+}
+
+
+double SimpleVerletEngine::estimate_snapshot_interval( const SimulationData& data, double snapshot_dist_fraction_ ) const {
+    
+    if (data.particles.empty()) return 0.0;
+
+    double total_mass = 0.0;
+    Vector3 r_cm{};
+    Vector3 v_cm{};
+
+    for (const auto& p : data.particles) {
+        total_mass += p.mass;
+        r_cm += p.position * p.mass;
+        v_cm += p.velocity * p.mass;
+    }
+
+    if (total_mass <= 0.0)
+        return 0.0;
+
+    r_cm = r_cm / total_mass;
+    v_cm = v_cm / total_mass;
+
+    double radius_squared = 0.0;
+    double max_velocity_squared = 0.0;
+
+    for (const auto& p : data.particles) {
+        const auto dr = p.position - r_cm;
+        const auto dv = p.velocity - v_cm;
+
+        radius_squared += p.mass * dr.dot(dr);
+        max_velocity_squared = std::max(max_velocity_squared, dv.dot(dv));
+    }
+
+    const double rms_radius =
+        std::sqrt(radius_squared / total_mass);
+
+    const double max_velocity = std::sqrt(max_velocity_squared);
+
+    if (max_velocity <= 0.0)
+        return std::numeric_limits<double>::max();
+
+    return snapshot_dist_fraction_ * rms_radius / max_velocity;
 }
 
 void SimpleVerletEngine::initialize(SimulationData& data) {

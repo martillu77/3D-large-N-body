@@ -22,6 +22,26 @@ add_executable(large-N-body
     src/InitialConditions.cpp
     src/SimpleVerletEngine.cpp
     src/GravitySolverCPU.cpp
+    src/SnapshotWriter.cpp
+    src/CheckpointWriter.cpp
     )
 
 target_include_directories(large-N-body PRIVATE src)
+
+find_package(Threads REQUIRED)
+target_link_libraries(large-N-body PRIVATE Threads::Threads)
+
+
+
+find_package(HDF5 REQUIRED COMPONENTS CXX)
+
+target_include_directories(large-N-body PRIVATE
+    src
+    ${HDF5_INCLUDE_DIRS}
+)
+
+target_link_libraries(large-N-body PRIVATE
+    Threads::Threads
+    ${HDF5_CXX_LIBRARIES}
+    ${HDF5_LIBRARIES}
+)

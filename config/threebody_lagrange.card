@@ -1,0 +1,17 @@
+simulation_name threebody_lagrange
+
+initial_conditions Threebody_Lagrange
+
+##############################################
+# Simulation 
+# Safety coeficient when choosing the simulation's time step: 
+#  ->   time_step = eta_dt * min_dynamical_time (SimpleVerletEngine)
+eta_dt 0.001
+
+# Simulation model
+model SimpleVerlet
+
+# Random seed
+seed 0
+
+snapshot_dist_fraction 0.1
