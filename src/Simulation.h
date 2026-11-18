@@ -10,6 +10,7 @@
 
 #include "SnapshotWriter.h"
 #include "CheckpointWriter.h"
+#include "CheckpointReader.h"
 
 #include <atomic>
 #include <cstdint>
@@ -23,6 +24,7 @@ public:
     ~Simulation();
 
     void load_configuration(const Configuration& configuration);
+    void load_checkpoint(const std::string& name);
 
     void start();
     void pause();
@@ -33,6 +35,7 @@ public:
 
     std::string status() const;
     std::string dump() const;
+    void request_checkpoint();
 
 private:
     void run();
@@ -59,8 +62,15 @@ private:
     std::unique_ptr<Engine> engine_;
 
     double next_snapshot_time_ = 0.0;
-
+    std::uint64_t snapshot_interval_steps_ = 1000;
     Snapshot create_snapshot() const;
+
+    std::atomic<bool> checkpoint_requested_{false};
+
+    Checkpoint create_checkpoint() const;
+    void process_checkpoint_request();
+
+    bool checkpoint_loaded_ = false;
 
 };
 

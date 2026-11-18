@@ -10,7 +10,7 @@ The project simulates the dynamical evolution of systems of particles interactin
 
 The C++ engine operates independently of the Python tools. The controller communicates with the simulation engine, while the visualiser works directly with the resulting HDF5 file. This separation allows the numerical engine, simulation control and visualisation to evolve independently.
 
-**Current version:** v0.0.2
+**Current version:** v0.0.3
 **Status:** Early development
 
 ## Features
@@ -115,6 +115,8 @@ The controller accepts the following commands:
 | `pause`                  | Pause the running simulation.
 | `resume`                 | Resume a paused simulation.
 | `stop`                   | Stop the simulation.
+| `checkpoint`             | Save current simulation state
+| `load_checkpoint <name>` | Load simulation from checkpoint
 | `status`                 | Display the current simulation state.
 | `dump`                   | Display detailed simulation information.
 | `help`                   | Show the available commands.
@@ -124,7 +126,18 @@ A typical workflow is to load a configuration file, start the simulation and mon
 
 The controller and simulation engine operate as separate components, communicating through the control interface.
 
+## Examples
 
+Loading and starting a simulation:
+engine> load_config config/threebody_Lagrange.card
+engine> start
+
+Example of saving a simulation (file name is in card's parameter: simulation_name):
+engine> checkpoint
+
+Example of resuming a saved simulation:
+engine> load_checkpoint threebody_lagrange
+engine> start
 
 ## Simulation Visualiser
 

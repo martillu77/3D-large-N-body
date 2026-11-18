@@ -4,6 +4,7 @@
 #include <sstream>
 #include <stdexcept>
 
+#include <nlohmann/json.hpp>
 
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
@@ -115,8 +116,67 @@ bool Configuration::load(const std::string& filename) {
 }
 
 /////////////////////////////////////////////////////////////////
+
+bool Configuration::load_json(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file) return false;
+
+    try {
+        using json = nlohmann::json;
+
+        json j;
+        file >> j;
+
+        Configuration candidate_config;
+        const auto& p = j.at("parameters");
+
+        candidate_config.simulation_name_ = j.at("simulation_name").get<std::string>();
+        candidate_config.model_ = j.at("model").get<std::string>();
+        candidate_config.initial_conditions_ = j.at("initial_conditions").get<std::string>();
+
+        candidate_config.eta_dt_ = j.at("eta_dt").get<double>();
+        candidate_config.snapshot_dist_fraction_ = j.at("snapshot_dist_fraction").get<double>();
+
+        candidate_config.particles_ = p.at("particles").get<int>();
+        candidate_config.mass_ = p.at("mass").get<double>();
+        candidate_config.radius_ = p.at("radius").get<double>();
+        candidate_config.distrib_radius_ = p.at("distribution_radius").get<double>();
+
+        candidate_config.stellar_mass_ = p.at("stellar_mass").get<double>();
+        candidate_config.cloud_mass_ = p.at("cloud_mass").get<double>();
+
+        candidate_config.disk_mass_fraction_ = p.at("disk_mass_fraction").get<double>();
+        candidate_config.lognormal_sigma_ = p.at("lognormal_sigma").get<double>();
+
+        candidate_config.omega_ = p.at("omega").get<double>();
+        candidate_config.rotational_bias_ = p.at("rotational_bias").get<double>();
+        candidate_config.sigma_ = p.at("sigma").get<double>();
+
+        candidate_config.collisions_ = p.at("collisions").get<bool>();
+        candidate_config.restitution_ = p.at("restitution").get<double>();
+
+        candidate_config.seed_provided_ = p.at("seed_provided").get<bool>();
+        candidate_config.seed_ = p.at("seed").get<std::uint64_t>();
+
+        *this = candidate_config;
+    }
+    catch (const std::exception&) {
+        return false;
+    }
+
+    return true;
+}
+
+
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+
+
+
+
+
+
 int Configuration::particles() const {
     return particles_;
 }

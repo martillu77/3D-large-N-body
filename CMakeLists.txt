@@ -7,9 +7,11 @@ project(large-N-body
     LANGUAGES CXX
 )
 
-option(DEBUG_FLAG "Enable debug output" ON)
+option(DEBUG_FLAG "Enable debug output" OFF)
 if(DEBUG_FLAG)
-    add_compile_definitions(DEBUG_FLAG)
+    add_compile_definitions(DEBUG_FLAG=1)
+else()
+    add_compile_definitions(DEBUG_FLAG=0)
 endif()
 
 set(CMAKE_CXX_STANDARD 20)
@@ -24,15 +26,11 @@ add_executable(large-N-body
     src/GravitySolverCPU.cpp
     src/SnapshotWriter.cpp
     src/CheckpointWriter.cpp
+    src/CheckpointReader.cpp
     )
 
-target_include_directories(large-N-body PRIVATE src)
-
 find_package(Threads REQUIRED)
-target_link_libraries(large-N-body PRIVATE Threads::Threads)
-
-
-
+find_package(nlohmann_json REQUIRED)
 find_package(HDF5 REQUIRED COMPONENTS CXX)
 
 target_include_directories(large-N-body PRIVATE
@@ -44,4 +42,5 @@ target_link_libraries(large-N-body PRIVATE
     Threads::Threads
     ${HDF5_CXX_LIBRARIES}
     ${HDF5_LIBRARIES}
+    nlohmann_json::nlohmann_json
 )

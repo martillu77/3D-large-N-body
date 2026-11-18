@@ -1,5 +1,7 @@
 #include "SnapshotWriter.h"
 
+#include "HDF5Mutex.h"
+#include <mutex>
 #include <H5Cpp.h>
 
 #include <filesystem>
@@ -10,6 +12,7 @@
 
 void SnapshotWriter::write(const Snapshot& snapshot) {
 
+    std::lock_guard<std::mutex> lock(hdf5_mutex());
 
     // Open or create the HDF5 file:
     std::unique_ptr<H5::H5File> file;

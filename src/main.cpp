@@ -1,7 +1,11 @@
 // sudo apt install libhdf5-dev
+// sudo apt install nlohmann-json3-dev
+
 
 // cmake -S . -B build
 // cmake --build build
+
+// load_config config/threebody_Lagrange.card
 
 #include "Configuration.h"
 #include "Simulation.h"
@@ -19,6 +23,8 @@ void print_help() {
         << "  pause                   Pause simulation\n"
         << "  resume                  Resume simulation\n"
         << "  stop                    Stop simulation\n"
+        << "  checkpoint              Save current simulation state\n"
+        << "  load_checkpoint <name>  Load simulation from checkpoint\n"
         << "  status                  Show current state\n"
         << "  dump                    Show simulation information\n"
         << "  help                    Show this help\n"
@@ -66,9 +72,15 @@ int main() {
             end_response();
         }
 
+        // Start a simulation after a configuration has been loaded or a checkpoint has been loaded
         else if (command == "start") {
-            simulation.start();
-            std::cout << "OK\n";
+            try {
+                simulation.start();
+                std::cout << "OK\n";
+            }
+            catch (const std::exception& e) {
+                std::cout << "ERROR " << e.what() << '\n';
+            }
             end_response();
         }
         else if (command == "pause") {
@@ -84,6 +96,35 @@ int main() {
         else if (command == "stop") {
             simulation.stop();
             std::cout << "OK\n";
+            end_response();
+        }
+        // Request a checkpoint to be saved
+        else if (command == "checkpoint") {
+            try {
+                simulation.request_checkpoint();
+                std::cout << "OK Checkpoint requested\n";
+            }
+            catch (const std::exception& e) {
+                std::cout << "ERROR " << e.what() << '\n';
+            }
+            end_response();
+        }
+        // Load a checkpoint and its corresponding configuration
+        else if (command == "load_checkpoint") {
+            std::string name;
+            input >> name;
+
+            if (name.empty()) {
+                std::cout << "ERROR Missing simulation name\n";
+            }
+
+            try {
+                simulation.load_checkpoint(name);
+                std::cout << "OK\n";
+            }
+            catch (const std::exception& e) {
+                std::cout << "ERROR " << e.what() << '\n';
+            }
             end_response();
         }
         else if (command == "set_snapshot_dist_fraction") {
@@ -104,6 +145,7 @@ int main() {
             catch (const std::exception& e) {
                 std::cout << "Error: " << e.what() << '\n';
             }
+            end_response();
         }
         else if (command == "status") {
             std::cout << simulation.status() << '\n';

@@ -17,14 +17,14 @@ namespace gravity {
         std::vector<Vector3> accelerations(N);
         double min_dynamical_time_squared = std::numeric_limits<double>::max();
 
-        #ifdef DEBUG_FLAG
+        #if DEBUG_FLAG
             double e_kin=0., e_pot=0., l_totx=0., l_toty=0., l_totz=0.;
             FILE* log = std::fopen("debugo.log", "a");
             //std::fprintf(log, "particles size      %zu\n", N);
         #endif
 
         for (std::size_t i = 0; i < N; ++i) {
-            #ifdef DEBUG_FLAG
+            #if DEBUG_FLAG
                 e_kin += 0.5 * particles[i].mass * (particles[i].velocity.x*particles[i].velocity.x + 
                                                     particles[i].velocity.y*particles[i].velocity.y + 
                                                     particles[i].velocity.z*particles[i].velocity.z);         // Kinetic energy for particle "i"
@@ -63,7 +63,7 @@ namespace gravity {
                 double thisdynamical_time_squared = 1./factor_i;  // min [ sqrt( l_i / abs(a_i) ) ]
                 if (thisdynamical_time_squared < min_dynamical_time_squared) min_dynamical_time_squared = thisdynamical_time_squared;
 
-                #ifdef DEBUG_FLAG
+                #if DEBUG_FLAG
                     e_pot -= particles[i].mass * particles[j].mass / r;                                       // Gravitational potential Energy
                     //std::fprintf(log, "factor_i      %.10e\n", factor_i);
                     //std::fprintf(log, "distance_ij   %.10e\n", r);
@@ -72,7 +72,7 @@ namespace gravity {
             }
         }
 
-        #ifdef DEBUG_FLAG
+        #if DEBUG_FLAG
             //FILE* log = std::fopen("debug.log", "a");
 
             if (log != nullptr) {

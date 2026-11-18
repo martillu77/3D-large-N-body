@@ -17,7 +17,6 @@ struct Checkpoint {
     double time;
     double dt;
     std::vector<Particle> particles;
-    // Més endavant: acceleracions i estat intern de l'integrador.
 };
 
 #endif

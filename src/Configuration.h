@@ -35,8 +35,10 @@ public:
     std::uint64_t seed() const;
 
     const std::string& simulation_name() const { return simulation_name_; }
+
     double snapshot_dist_fraction() const { return snapshot_dist_fraction_; }
 
+    bool load_json(const std::string& filename);
 
 private:
 
