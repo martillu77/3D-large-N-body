@@ -109,35 +109,45 @@ Run it from the project root:
 
 The controller accepts the following commands:
 
-| Command                  | Description
-| `load_config <filename>` | Load simulation parameters from a configuration file.
-| `start`                  | Start the simulation.
-| `pause`                  | Pause the running simulation.
-| `resume`                 | Resume a paused simulation.
-| `stop`                   | Stop the simulation.
-| `checkpoint`             | Save current simulation state
-| `load_checkpoint <name>` | Load simulation from checkpoint
-| `status`                 | Display the current simulation state.
-| `dump`                   | Display detailed simulation information.
-| `help`                   | Show the available commands.
-| `quit`                   | Exit the controller.
+| Command | Description |
+|:---|:---|
+| `load_config <filename>` | Load simulation parameters from a configuration file. |
+| `start`                  | Start the simulation. |
+| `pause`                  | Pause the running simulation. |
+| `resume`                 | Resume a paused simulation. |
+| `stop`                   | Stop the simulation. |
+| `checkpoint`             | Save the current simulation state. |
+| `load_checkpoint <name>` | Load a simulation from its latest checkpoint. |
+| `status`                 | Display the current simulation state. |
+| `dump`                   | Display detailed simulation information. |
+| `help`                   | Show the available commands. |
+| `quit`                   | Exit the controller. |
 
-A typical workflow is to load a configuration file, start the simulation and monitor its progress using `status` and `dump`. The simulation can be paused, resumed or stopped at any time BUT not saved yet.
+A typical workflow is to load a configuration file, start the simulation, and monitor its progress using `status` and `dump`. A running simulation can be paused, resumed, or stopped at any time. Its state can also be saved to a checkpoint and restored later.
 
 The controller and simulation engine operate as separate components, communicating through the control interface.
 
 ## Examples
 
-Loading and starting a simulation:
+**Loading and starting a simulation:**
+
+```text
 engine> load_config config/threebody_Lagrange.card
 engine> start
+```
 
-Example of saving a simulation (file name is in card's parameter: simulation_name):
+**Saving a simulation** (the filename is specified by the `simulation_name` parameter in the configuration file):
+
+```text
 engine> checkpoint
+```
 
-Example of resuming a saved simulation:
+**Resuming a saved simulation:**
+
+```text
 engine> load_checkpoint threebody_lagrange
 engine> start
+```
 
 ## Simulation Visualiser
 
@@ -148,18 +158,19 @@ Run it from the project root:
 
 The visualiser provides the following controls:
 
-| Control                 | Description
-| **Play**                | Start or resume playback.
-| **Pause**               | Pause playback.
-| **FPS slider**          | Adjust the target display update frequency (frames per second).
-| **Frame step slider**   | Set the number of snapshots to advance at each update.
-| **Snapshot slider**     | Select a specific snapshot.
-| **Mouse wheel**         | Zoom in or out, centred on the mouse position.
-| **Left / Right arrows** | Move one snapshot backward or forward.
-| **Page Up / Page Down** | Jump 100 snapshots forward or backward.
-| **Space**               | Toggle playback.
-| **r**                   | Reset the zoom to the initial view.
-| **q**                   | Close the visualiser.
+| Control                 | Description|
+|:---|:---|
+| **Play**                | Start or resume playback.|
+| **Pause**               | Pause playback.|
+| **FPS slider**          | Adjust the target display update frequency (frames per second).|
+| **Frame step slider**   | Set the number of snapshots to advance at each update.|
+| **Snapshot slider**     | Select a specific snapshot.|
+| **Mouse wheel**         | Zoom in or out, centred on the mouse position.|
+| **Left / Right arrows** | Move one snapshot backward or forward.|
+| **Page Up / Page Down** | Jump 100 snapshots forward or backward.|
+| **Space**               | Toggle playback.|
+| **r**                   | Reset the zoom to the initial view.|
+| **q**                   | Close the visualiser.|
 
 The FPS and frame step controls can be combined to adjust playback speed. Increasing the frame step skips snapshots during playback, allowing faster navigation through long simulations even when the display update frequency is limited.
 
